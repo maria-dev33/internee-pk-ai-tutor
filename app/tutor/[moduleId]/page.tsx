@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { LEARNING_MODULES } from '../../modules';
+import ReactMarkdown from 'react-markdown';
 
 export default function TutorPage({ params }: { params: Promise<{ moduleId: string }> }) {
   const { moduleId } = use(params);
@@ -146,7 +147,7 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
                   borderBottomRightRadius: msg.role === 'user' ? '4px' : '14px',
                   borderBottomLeftRadius: msg.role === 'assistant' ? '4px' : '14px',
                 }}>
-                  {msg.content}
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
               </div>
             ))}

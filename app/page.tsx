@@ -39,7 +39,7 @@ export default function HomePage() {
       <div style={{textAlign:'center',padding:'80px 24px 60px',position:'relative',overflow:'hidden'}}>
         <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',width:'600px',height:'600px',background:'radial-gradient(circle,rgba(6,182,212,0.08) 0%,transparent 70%)',pointerEvents:'none'}}/>
         <div style={{display:'inline-block',background:'rgba(6,182,212,0.1)',border:'1px solid rgba(6,182,212,0.3)',borderRadius:'99px',padding:'6px 16px',fontSize:'13px',color:'#06b6d4',marginBottom:'24px'}}>
-          🎓 Pakistan's #1 AI Learning Platform
+          🎓 Pakistan's No.1 AI Learning Platform
         </div>
         <h1 style={{fontSize:'56px',fontWeight:'800',margin:'0 0 16px',lineHeight:1.1}}>
           Build Skills.<br/>
@@ -52,9 +52,9 @@ export default function HomePage() {
           <div style={{background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',padding:'14px 32px',borderRadius:'10px',fontWeight:'700',fontSize:'15px',cursor:'pointer'}}>
             Start Learning →
           </div>
-          <div style={{border:'1px solid #1e2a45',padding:'14px 32px',borderRadius:'10px',fontWeight:'600',fontSize:'15px',cursor:'pointer',color:'#94a3b8'}}>
-            Explore Modules
-          </div>
+          <a href="#modules" style={{border:'1px solid #1e2a45',padding:'14px 32px',borderRadius:'10px',fontWeight:'600',fontSize:'15px',cursor:'pointer',color:'#94a3b8',textDecoration:'none',display:'inline-block'}}>
+  Explore Modules
+</a>
         </div>
 
         {/* Stats */}
