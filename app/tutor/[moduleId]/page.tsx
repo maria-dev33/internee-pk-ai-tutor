@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import { LEARNING_MODULES } from '../../modules';
 import ReactMarkdown from 'react-markdown';
+import { LEARNING_MODULES } from '../../modules';
 
 export default function TutorPage({ params }: { params: Promise<{ moduleId: string }> }) {
   const { moduleId } = use(params);
@@ -21,7 +21,7 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
     }
     setMessages([{
       role: 'assistant',
-      content: `👋 Hello! I am your AI tutor for ${mod?.title}. I will help you learn step by step. What would you like to learn first?`
+      content: `👋 Hello! I am your AI tutor for **${mod?.title}**. I will help you learn step by step. What would you like to learn first?`
     }]);
   }, []);
 
@@ -37,6 +37,12 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
     const updated = [...new Set([...completedTopics, topic])];
     setCompletedTopics(updated);
     saveProgress(updated);
+  }
+
+  function resetProgress() {
+    if (!mod) return;
+    localStorage.removeItem(`progress_${mod.id}`);
+    setCompletedTopics([]);
   }
 
   async function sendMessage() {
@@ -72,18 +78,18 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
 
   return (
     <div style={{minHeight:'100vh',background:'#0a0f1e',fontFamily:'sans-serif',color:'white'}}>
-      
+
       {/* Header */}
-      <nav style={{borderBottom:'1px solid #1e2a45',padding:'14px 24px',display:'flex',alignItems:'center',gap:'16px',background:'rgba(10,15,30,0.95)',position:'sticky',top:0,zIndex:100,backdropFilter:'blur(10px)'}}>
-        <a href="/" style={{color:'#64748b',textDecoration:'none',fontSize:'20px',lineHeight:1}}>←</a>
+      <nav style={{borderBottom:'1px solid #1e2a45',padding:'14px 24px',display:'flex',alignItems:'center',gap:'16px',background:'rgba(10,15,30,0.95)',position:'sticky',top:0,zIndex:100}}>
+        <a href="/" style={{color:'#64748b',textDecoration:'none',fontSize:'20px'}}>←</a>
         <div style={{width:'1px',height:'24px',background:'#1e2a45'}}/>
         <div style={{flex:1}}>
-          <h1 style={{margin:0,fontSize:'16px',fontWeight:'700',color:'white'}}>{mod.title}</h1>
+          <h1 style={{margin:0,fontSize:'16px',fontWeight:'700'}}>{mod.title}</h1>
           <div style={{fontSize:'12px',color:'#64748b',marginTop:'2px'}}>{progress}% complete</div>
         </div>
-        <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+        <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
           <div style={{height:'6px',width:'120px',background:'#1e2a45',borderRadius:'99px',overflow:'hidden'}}>
-            <div style={{height:'100%',background:'linear-gradient(90deg,#06b6d4,#8b5cf6)',width:`${progress}%`,borderRadius:'99px',transition:'width 0.5s'}}/>
+            <div style={{height:'100%',background:'linear-gradient(90deg,#06b6d4,#8b5cf6)',width:`${progress}%`,transition:'width 0.5s'}}/>
           </div>
           <span style={{fontSize:'12px',color:'#06b6d4',fontWeight:'600'}}>{progress}%</span>
         </div>
@@ -93,17 +99,26 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
 
         {/* Sidebar */}
         <div style={{display:'flex',flexDirection:'column',gap:'16px'}}>
-          
+
           {/* Topics */}
           <div style={{background:'#0d1526',border:'1px solid #1e2a45',borderRadius:'16px',padding:'20px'}}>
-            <h3 style={{margin:'0 0 16px',fontSize:'14px',fontWeight:'700',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'0.05em'}}>📋 Topics</h3>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
+              <h3 style={{margin:0,fontSize:'13px',fontWeight:'700',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'0.05em'}}>📋 Topics</h3>
+              {completedTopics.length > 0 && (
+                <button onClick={resetProgress} style={{fontSize:'11px',background:'rgba(239,68,68,0.1)',color:'#ef4444',border:'1px solid rgba(239,68,68,0.3)',padding:'3px 10px',borderRadius:'99px',cursor:'pointer'}}>
+                  Reset
+                </button>
+              )}
+            </div>
+            <div style={{height:'4px',background:'#1e2a45',borderRadius:'99px',marginBottom:'16px',overflow:'hidden'}}>
+              <div style={{height:'100%',background:'linear-gradient(90deg,#06b6d4,#8b5cf6)',width:`${progress}%`,transition:'width 0.5s'}}/>
+            </div>
             {mod.topics.map(topic => {
               const done = completedTopics.includes(topic);
               return (
                 <div key={topic} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid #1e2a45'}}>
                   <span style={{fontSize:'13px',color: done ? '#10b981' : '#94a3b8',display:'flex',alignItems:'center',gap:'8px'}}>
-                    <span style={{fontSize:'16px'}}>{done ? '✅' : '⬜'}</span>
-                    {topic}
+                    <span>{done ? '✅' : '⬜'}</span>{topic}
                   </span>
                   {!done && (
                     <button onClick={() => markDone(topic)} style={{fontSize:'11px',background:'rgba(6,182,212,0.1)',color:'#06b6d4',border:'1px solid rgba(6,182,212,0.3)',padding:'3px 10px',borderRadius:'99px',cursor:'pointer'}}>
@@ -115,11 +130,12 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
             })}
           </div>
 
-          {/* Quick Questions */}
+          {/* Quick Ask */}
           <div style={{background:'#0d1526',border:'1px solid #1e2a45',borderRadius:'16px',padding:'20px'}}>
-            <h3 style={{margin:'0 0 12px',fontSize:'14px',fontWeight:'700',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'0.05em'}}>💡 Quick Ask</h3>
+            <h3 style={{margin:'0 0 12px',fontSize:'13px',fontWeight:'700',color:'#94a3b8',textTransform:'uppercase',letterSpacing:'0.05em'}}>💡 Quick Ask</h3>
             {['Explain simply', 'Give an example', 'I am confused', 'Practice exercise', 'Quiz me'].map(q => (
-              <button key={q} onClick={() => setInput(q)} style={{display:'block',width:'100%',textAlign:'left',padding:'9px 12px',margin:'6px 0',background:'#0a0f1e',border:'1px solid #1e2a45',borderRadius:'8px',fontSize:'13px',color:'#64748b',cursor:'pointer',transition:'all 0.2s'}}
+              <button key={q} onClick={() => setInput(q)}
+                style={{display:'block',width:'100%',textAlign:'left',padding:'9px 12px',margin:'6px 0',background:'#0a0f1e',border:'1px solid #1e2a45',borderRadius:'8px',fontSize:'13px',color:'#64748b',cursor:'pointer'}}
                 onMouseEnter={e => {e.currentTarget.style.borderColor='#06b6d4'; e.currentTarget.style.color='#06b6d4';}}
                 onMouseLeave={e => {e.currentTarget.style.borderColor='#1e2a45'; e.currentTarget.style.color='#64748b';}}
               >
@@ -131,8 +147,6 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
 
         {/* Chat */}
         <div style={{display:'flex',flexDirection:'column',height:'82vh'}}>
-          
-          {/* Messages */}
           <div style={{flex:1,overflowY:'auto',background:'#0d1526',border:'1px solid #1e2a45',borderRadius:'16px',padding:'20px',marginBottom:'12px',display:'flex',flexDirection:'column',gap:'16px'}}>
             {messages.map((msg, i) => (
               <div key={i} style={{display:'flex',justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',gap:'10px',alignItems:'flex-start'}}>
@@ -143,25 +157,23 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
                 )}
                 <div style={{maxWidth:'75%',padding:'12px 16px',borderRadius:'14px',fontSize:'14px',lineHeight:'1.7',
                   background: msg.role === 'user' ? 'linear-gradient(135deg,#06b6d4,#8b5cf6)' : '#1e2a45',
-                  color: 'white',
+                  color:'white',
                   borderBottomRightRadius: msg.role === 'user' ? '4px' : '14px',
                   borderBottomLeftRadius: msg.role === 'assistant' ? '4px' : '14px',
                 }}>
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  {msg.role === 'assistant' ? (
+                    <div style={{color:'white'}}>
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : msg.content}
                 </div>
               </div>
             ))}
             {loading && (
               <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-                <div style={{width:'34px',height:'34px',background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:'800'}}>
-                  AI
-                </div>
-                <div style={{background:'#1e2a45',padding:'12px 16px',borderRadius:'14px',borderBottomLeftRadius:'4px'}}>
-                  <div style={{display:'flex',gap:'4px',alignItems:'center'}}>
-                    {[0,1,2].map(i => (
-                      <div key={i} style={{width:'6px',height:'6px',background:'#06b6d4',borderRadius:'50%',animation:'bounce 1s infinite',animationDelay:`${i*0.2}s`}}/>
-                    ))}
-                  </div>
+                <div style={{width:'34px',height:'34px',background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:'800'}}>AI</div>
+                <div style={{background:'#1e2a45',padding:'12px 16px',borderRadius:'14px',borderBottomLeftRadius:'4px',color:'#94a3b8',fontSize:'13px'}}>
+                  Thinking...
                 </div>
               </div>
             )}
@@ -179,7 +191,7 @@ export default function TutorPage({ params }: { params: Promise<{ moduleId: stri
             <button
               onClick={sendMessage}
               disabled={!input.trim() || loading}
-              style={{background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',color:'white',border:'none',padding:'10px 22px',borderRadius:'10px',fontSize:'14px',fontWeight:'600',cursor:'pointer',opacity:(!input.trim()||loading)?0.5:1,transition:'opacity 0.2s'}}
+              style={{background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',color:'white',border:'none',padding:'10px 22px',borderRadius:'10px',fontSize:'14px',fontWeight:'600',cursor:'pointer',opacity:(!input.trim()||loading)?0.5:1}}
             >
               Send →
             </button>
