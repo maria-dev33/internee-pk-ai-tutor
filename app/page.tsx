@@ -27,13 +27,12 @@ export default function HomePage() {
           <span style={{fontWeight:'700',fontSize:'18px',color:'white'}}>internee.pk</span>
         </div>
         <div style={{display:'flex',gap:'32px',fontSize:'14px',color:'#94a3b8'}}>
-          <span style={{color:'#06b6d4',cursor:'pointer'}}>Home</span>
-          <span style={{cursor:'pointer'}}>Modules</span>
-          <span style={{cursor:'pointer'}}>Progress</span>
-        </div>
-        <div style={{background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',padding:'8px 20px',borderRadius:'8px',fontSize:'14px',fontWeight:'600',cursor:'pointer'}}>
-          Get Started
-        </div>
+  <a href="/" style={{color:'#06b6d4',cursor:'pointer',textDecoration:'none'}}>Home</a>
+  <a href="#modules" style={{cursor:'pointer',textDecoration:'none',color:'#94a3b8'}}>Modules</a>
+</div>
+        <a href="#modules" style={{background:'linear-gradient(135deg,#06b6d4,#8b5cf6)',padding:'14px 32px',borderRadius:'10px',fontWeight:'700',fontSize:'15px',cursor:'pointer',textDecoration:'none',color:'white'}}>
+  Start Learning →
+</a>
       </nav>
 
       {/* Hero */}
@@ -75,7 +74,7 @@ export default function HomePage() {
 
       {/* Modules */}
       <div style={{maxWidth:'1100px',margin:'0 auto',padding:'0 24px 80px'}}>
-        <h2 style={{fontSize:'28px',fontWeight:'700',marginBottom:'8px'}}>📚 Learning Modules</h2>
+        <h2 id="modules" style={{fontSize:'28px',fontWeight:'700',marginBottom:'8px'}}>📚 Learning Modules</h2>
         <p style={{color:'#64748b',marginBottom:'32px',fontSize:'15px'}}>Choose a module and start learning with your AI tutor</p>
 
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))',gap:'20px'}}>
